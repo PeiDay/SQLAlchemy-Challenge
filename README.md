@@ -21,11 +21,11 @@ Retrieve, summarize, and plot the most recent 12 months of temperature observati
 
 ## Climate App
 The Weather App Home Page includes available API routes as below:
-**/api/v1.0/precipitation**
-**/api/v1.0/stations**
-**/api/v1.0/tobs**
-Enter a start date to retrieve the weather info : **/api/v1.0/yyyy-mm-dd**
-Enter a start and end date to retrieve the weather info : **/api/v1.0/yyyy-mm-dd/yyyy-mm-dd**
+* **/api/v1.0/precipitation**
+* **/api/v1.0/stations**
+* **/api/v1.0/tobs**
+* Enter a start date to retrieve the weather info : **/api/v1.0/yyyy-mm-dd**
+* Enter a start and end date to retrieve the weather info : **/api/v1.0/yyyy-mm-dd/yyyy-mm-dd**
 
 
 ## Other Analysis
@@ -33,8 +33,8 @@ Enter a start and end date to retrieve the weather info : **/api/v1.0/yyyy-mm-dd
 ### Temperature Analysis I
 #### Is there a meaningful difference between temperatures between the months of June and December?
 
-* **T-test** was used to calculate the means of two different independent samples: __the temperature for June__ vs __temperature for December__ across all available years in the dataset.
+* **T-test** was used to calculate the means of two different independent samples: _the temperature for June_ vs _temperature for December_ across all available years in the dataset.
 
 * **T-test Results**: t = 30.624201480767336, p = 6.622829250184814e-178
 
-* **Conclusion**: With the __p-value__ is extremely close to 0, there is not sufficient evidence to conclude that there is a significant difference in means between June and December temperatures across all the data years available.
+* **Conclusion**: With the _p-value_ is extremely close to **0**, there is not sufficient evidence to conclude that there is a significant difference in means between June and December temperatures across all the data years available.
