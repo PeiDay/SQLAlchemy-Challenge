@@ -12,7 +12,7 @@ from sqlalchemy import create_engine, func
 from flask import Flask, jsonify
 
 # Engines and Database
-engine = create_engine("sqlite:////Users/ph/Documents/MyDataBootcamp/10-Advanced-Data-Storage-and-Retrieval/SQLAlchemy-Challenge/Resources/hawaii.sqlite")
+engine = create_engine("sqlite:///hawaii.sqlite")
 Base = automap_base()
 Base.prepare(engine, reflect = True)
 
@@ -115,58 +115,41 @@ def tobs():
 # and the max temperature for a given start or start-end range.
 
 # When given the start only, calculate `TMIN`, `TAVG`, and `TMAX` for 
-# all dates greater than and equal to the start date.
+# all dates greater than and equal to the start date. @app.route("/api/v1.0/<start>")
+
+# When given the start and the end date, calculate the `TMIN`, `TAVG`, 
+# and `TMAX` for dates between the start and end date inclusive. @app.route("/api/v1.0/<start>/<end>")
+
 
 @app.route("/api/v1.0/<start>")
-
-def Start_date(start):
+@app.route("/api/v1.0/<start>/<end>")
+def date_range(start = None, end = None):
 
 
     """Return a list of min, avg and max tobs for the start date"""
-    result_start = session.query(func.min(measurement.tobs), \
-        func.max(measurement.tobs), \
-        func.avg(measurement.tobs)). \
-        filter(measurement.date >= start).all()
 
+    select = [func.min(measurement.tobs), func.max(measurement.tobs),func.avg(measurement.tobs)]
+
+    if not end:
+        result = session.query(*select).filter(measurement.date >= start).all()
+    else:
+        result = session.query(*select).filter(measurement.date >= start)\
+        .filter(measurement.date <= end).all()
+        
     session.close()
 
     # Create a dictionary from the row data and append to a list of start_tobs
-    start_tobs = []
-    for min, max, avg in result_start:
-        start_tobs_dict = {}
-        start_tobs_dict["min_temp"] = min
-        start_tobs_dict["max_temp"] = max
-        start_tobs_dict["avg_temp"] = avg
-        start_tobs.append(start_tobs_dict) 
+    # dates_tobs = []
+    # for min, max, avg in result:
+    #     dates_tobs_dict = {}
+    #     dates_tobs_dict["min_temp"] = min
+    #     dates_tobs_dict["max_temp"] = max
+    #     dates_tobs_dict["avg_temp"] = avg
+    #     dates_tobs.append(dates_tobs_dict) 
 
-    return jsonify(start_tobs)
+    dates_tobs = list(np.ravel(result))
 
-# When given the start and the end date, calculate the `TMIN`, `TAVG`, 
-# and `TMAX` for dates between the start and end date inclusive.
-
-@app.route("/api/v1.0/<start>/<end>")
-def start_to_end(start, end):
-
-    """Return a list of min, avg and max tobs between start and end dates"""
-
-    results_duration = session.query(func.min(measurement.tobs), \
-        func.max(measurement.tobs), \
-        func.avg(measurement.tobs)). \
-        filter(measurement.date >= start). \
-        filter(measurement.date <= end).all()
-
-    session.close()
-  
-    # Create a dictionary from the row data and append to a list of start_end_tobs
-    start_to_end_tobs = []
-    for min, max, avg in results_duration:
-        start_to_end_dict = {}
-        start_to_end_dict["min_temp"] = min
-        start_to_end_dict["max_temp"] = max
-        start_to_end_dict["avg_temp"] = avg
-        start_to_end_tobs.append(start_to_end_dict) 
-    
-    return jsonify(start_to_end_tobs)
+    return jsonify(dates_tobs)
 
 if __name__ == '__main__':
     app.run(debug=True)
